@@ -12,6 +12,7 @@ const columns = [
         title: 'Nickname',
         dataIndex: 'nick',
         width: '30%',
+        render: (text, row) => <a href={`https://fantasy.premierleague.com/entry/${row.id}/event/${row.gw}`} target="_blank">{text}</a>,
     },
     {
         title: 'Points',

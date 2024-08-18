@@ -9,7 +9,7 @@ import SemiFinal from './knockout/SemiFinal.jsx'
 import Final from './knockout/Final.jsx'
 
 
-const currentGwURL = 'https://mrbui95.github.io/amvn/data/current_gw.json';
+const currentGwURL = 'https://mrbui95.github.io/amvn2425/data/current_gw.json';
 
 const dropDownItems = new Array(38).fill(null).map((_, index) => ({
     key: index + 1,
@@ -21,12 +21,13 @@ function European() {
     const [selectedGw, setSelectedGw] = useState('');
     const [userData, setUserData] = useState([])
     const [gwData, setGwData] = useState([])
+    const [totalCap, setTotalCap] = useState({})
     const [prevGwData, setPrevGwData] = useState([])
     const [stage, setStage] = useState(1)
 
     const getUserData = async () => {
         try {
-            const userDataURL = "https://mrbui95.github.io/amvn/data/u_info.json"
+            const userDataURL = "https://mrbui95.github.io/amvn2425/data/u_info.json"
 
             const response = await fetch(userDataURL);
             if (!response.ok) {
@@ -44,6 +45,25 @@ function European() {
         }
     }
 
+    const getTotalCap = async (selectedGw) => {
+        try {
+            if (selectedGw) {
+                const totalCapURL = `https://mrbui95.github.io/amvn2425/data/c1/result/total_cap_${selectedGw}.json`;
+
+                const response = await fetch(totalCapURL);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+
+                return data
+            }
+        } catch (e) {
+            console.error(e)
+            return null
+        }
+    }
+
     const getGWData = async (selectedGw) => {
         try {
             if (selectedGw) {
@@ -55,16 +75,19 @@ function European() {
                 }
                 const data = await response.json();
 
+                const totalCap = await getTotalCap(selectedGw)
+                setTotalCap(totalCap)
 
                 const gwData = Object.entries(data).map(([key, value]) => {
                     return ({
                         id: key,
                         nick: getUInfoName(key),
-                        points: value.entry_history.points,
-                        totalPoints: value.entry_history.total_points,
-                        teamValue: (value.entry_history.bank + value.entry_history.value) / 10,
-                        netPoints: value.entry_history.points - value.entry_history.event_transfers_cost,
-                        capPoint: 0,
+                        points: value?.entry_history?.points || 0,
+                        totalPoints: value?.entry_history?.total_points || 0,
+                        teamValue: (value?.entry_history?.value || 0) / 10,
+                        netPoints: (value?.entry_history?.points || 0) - (value?.entry_history?.event_transfers_cost || 0),
+                        capPoint: totalCap[key],
+                        gw: selectedGw,
                     })
                 }).sort((a, b) => {
                     if (b.totalPoints !== a.totalPoints) {
@@ -97,7 +120,7 @@ function European() {
     const getUInfoName = (uid) => {
         const uData = getUInfo(uid)
         if (uData) {
-            return `${uid} - ${uData.name} (${uData.player_first_name} ${uData.player_last_name})`
+            return `${uData.name} (${uData.player_first_name} ${uData.player_last_name})`
         }
         return ''
     }
