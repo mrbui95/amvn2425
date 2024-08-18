@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space, Typography } from 'antd';
+import { Select } from 'antd'
 import PhanHang from './phanhang/PhanHang.jsx'
 import Group from './group/Group.jsx'
 import PlayOff from './knockout/PlayOff.jsx'
@@ -13,7 +14,7 @@ const currentGwURL = 'https://mrbui95.github.io/amvn2425/data/current_gw.json';
 
 const dropDownItems = new Array(38).fill(null).map((_, index) => ({
     key: index + 1,
-    label: `GW ${index + 1}`,
+    label: `Gameweek ${index + 1}`,
 }));
 
 function European() {
@@ -156,7 +157,7 @@ function European() {
         }
         const data = await response.json();
         setCurrentGw(data.current_gw);
-        setSelectedGw(currentGw)
+        setSelectedGw(data.current_gw)
 
         const gwData = await getGWData(currentGw)
         setGwData(gwData)
@@ -193,7 +194,17 @@ function European() {
         updateStage(selectedGw)
 
         fetchUpdate()
-    }, [selectedGw, currentGw])
+    }, [selectedGw])
+
+    const renderMenu = () => {
+        const items = dropDownItems.filter(item => item.key <= currentGw)
+        return {
+            items,
+            selectable: true,
+            selectedKeys: [currentGw],
+            onClick: onSelectGW,
+        }
+    }
 
     const onSelectGW = (e) => {
         setSelectedGw(e.key)
@@ -293,12 +304,8 @@ function European() {
             <div>European Cup 2024 - 2025</div>
             <div>
                 <Dropdown
-                    menu={{
-                        items: dropDownItems.filter(item => item.key <= currentGw),
-                        selectable: true,
-                        selectedKeys: [currentGw],
-                        onClick: onSelectGW,
-                    }}
+                    menu={renderMenu()}
+                    autoFocus={true}
                 >
                     <Typography.Link>
                         <Space>

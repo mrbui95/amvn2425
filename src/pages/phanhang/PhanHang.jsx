@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
+import { GROUP_MAX_MEMBER } from '../../config/config'
 
 
 const columns = [
@@ -17,14 +18,14 @@ const columns = [
     {
         title: 'Points',
         dataIndex: 'points',
-        width: '15%',
+        width: '14%',
     },
     {
         title: 'Total Points',
         dataIndex: 'totalPoints',
         defaultSortOrder: 'descend',
         sorter: (a, b) => a.totalPoints - b.totalPoints,
-        width: '15%',
+        width: '18%',
     },
     {
         title: 'Team Values',
@@ -32,9 +33,9 @@ const columns = [
         width: '15%',
     },
     {
-        title: 'Captain Points',
+        title: 'Total Cap',
         dataIndex: 'capPoint',
-        width: '15%',
+        width: '13%',
     },
 ]
 
@@ -46,9 +47,23 @@ function PhanHang(props) {
     }, [])
 
     const onChange = (e) => {
-        console.log('onChange', e)
+        
     }
 
+    const calcRowClassName = (record) => {
+        let className = 'row-phanhang '
+        console.log(record)
+        if (record.index <= GROUP_MAX_MEMBER) {
+            return className + ' row-phanhang-c1'
+        } else if (record.index <= GROUP_MAX_MEMBER * 2) {
+            return className + ' row-phanhang-c2'
+        } else if (record.index <= GROUP_MAX_MEMBER * 3) {
+            return className + ' row-phanhang-c3'
+        } else {
+            return className + ' row-phanhang-c4'
+        }
+        
+    }
 
     return (
         <Table
@@ -59,7 +74,7 @@ function PhanHang(props) {
             pagination={false}
             tableLayout={'fixed'}
             loading={loading}
-            rowClassName={'row-phanhang'}
+            rowClassName={calcRowClassName}
             sticky={{
                 offsetHeader: 0,
             }}

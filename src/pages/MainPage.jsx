@@ -6,28 +6,35 @@ import TheThuc from './TheThuc.jsx';
 
 const { Header, Content, Footer } = Layout;
 
+const PAGE_NAME = {
+  HOME: 'home',
+  EUROPEAN: 'european',
+  SECOND_CHANCE: 'second-chance',
+  THE_THUC: 'the_thuc'
+}
+
 const items = [
   {
     key: 'league',
     label: 'Giải đấu',
     children: [
       {
-        key: 'european',
+        key: PAGE_NAME.EUROPEAN,
         label: 'European Cup',
+      },
+      {
+        key: PAGE_NAME.SECOND_CHANCE,
+        label: 'Second Chance',
       }
     ]
   },
   {
-    key: 2,
+    key: PAGE_NAME.THE_THUC,
     label: 'Thể thức',
   },
 ]
 
-const PAGE_NAME = {
-  HOME: 'home',
-  EUROPEAN: 'european',
-  THE_THUC: 'the_thuc'
-}
+
 
 
 function MainPage() {
@@ -46,6 +53,9 @@ function MainPage() {
       case PAGE_NAME.EUROPEAN: {
         return (<European />)
       }
+      case PAGE_NAME.SECOND_CHANCE: {
+        return (<European />)
+      }
       case PAGE_NAME.THE_THUC: {
         return (<TheThuc />)
       }
@@ -55,16 +65,11 @@ function MainPage() {
   return (
     <Layout>
       <Header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 1,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-        }}
+        className='main-header'
       >
-        <div className="demo-logo" />
+        <div className="demo-logo">
+          <img src="logo_amvn.png" alt="logo" />
+        </div>
         <Menu
           theme="dark"
           mode="horizontal"
@@ -95,7 +100,7 @@ function MainPage() {
           textAlign: 'center',
         }}
       >
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        Fantasy AMVN ©{new Date().getFullYear()} Created by Thanh Bui
       </Footer>
     </Layout>
 

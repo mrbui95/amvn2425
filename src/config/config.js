@@ -1,3 +1,5 @@
+export const GROUP_MAX_MEMBER = 16
+
 export const GROUP_NAME = {
     C1: 0,
     C2: 1,
