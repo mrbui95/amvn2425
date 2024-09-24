@@ -14,7 +14,8 @@
     "react-scripts": "^5.0.1",
     "resolve-url-loader": "^5.0.0",
     "sass-loader": "^14.2.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11"

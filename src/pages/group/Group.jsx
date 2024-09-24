@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Collapse } from 'antd';
 import { Table } from 'antd';
-import { GROUP_NAME, COLUMN_H2H, COLUMN_GROUP_RANK } from '../../config/config'
+import { GROUP_NAME, COLUMN_PHAN_HANG_RANK } from '../../config/config'
 
 function Group(props) {
     const [expandIconPosition, setExpandIconPosition] = useState('start');
     const [fixtureData, setFixtureData] = useState([])
+    const [groupData, setGroupData] = useState([])
     const [rankData, setRankData] = useState([])
     const [loading, setLoading] = useState(true);
 
@@ -14,6 +15,23 @@ function Group(props) {
             const fixtureDataURL = "https://mrbui95.github.io/amvn2425/data/c1/group/fixture_" + props.stage + ".json"
 
             const response = await fetch(fixtureDataURL);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+
+            return data
+        } catch (e) {
+            console.error(e)
+            return null
+        }
+    }
+
+    const getGroupData = async () => {
+        try {
+            const groupDataURL = "https://mrbui95.github.io/amvn2425/data/c1/group/group_" + props.stage + ".json"
+
+            const response = await fetch(groupDataURL);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -48,17 +66,9 @@ function Group(props) {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const fixtureData = await getFixtureData();
-            console.log(fixtureData)
-            if (fixtureData) {
-                setFixtureData(fixtureData);
-                const rankData = await getRankData(props.selectedGw)
-                if (rankData) {
-                    setRankData(rankData)
-                } else {
-                    setRankData([])
-                }
-            }
+            const groupData = await getGroupData();
+            setGroupData(groupData)
+            console.log(groupData)
             setLoading(false);
         };
 
@@ -68,12 +78,6 @@ function Group(props) {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const rankData = await getRankData(props.selectedGw)
-            if (rankData) {
-                setRankData(rankData)
-            } else {
-                setRankData([])
-            }
             setLoading(false);
         };
 
@@ -90,88 +94,39 @@ function Group(props) {
     }
 
     const renderGroupResult = (groupName) => {
-        let gwData = []
-
-        let fixtureAll
-        let fixture
-
-        const round = getRound()
-        let rank = []
+        let groupList
 
         switch (groupName) {
             case GROUP_NAME.C1: {
-                fixtureAll = fixtureData['c1']
-                rank = rankData['c1']
+                groupList = groupData['c1']
                 break
             }
             case GROUP_NAME.C2: {
-                fixtureAll = fixtureData['c2']
-                rank = rankData['c2']
+                groupList = groupData['c2']
                 break
             }
             case GROUP_NAME.C3: {
-                fixtureAll = fixtureData['c3']
-                rank = rankData['c3']
+                groupList = groupData['c3']
                 break
             }
             case GROUP_NAME.C4: {
-                fixtureAll = fixtureData['c4']
-                rank = rankData['c4']
+                groupList = groupData['c4']
                 break
             }
         }
 
-        if (Array.isArray(fixtureAll)) {
-            fixture = fixtureAll[round]
-        }
+        let rank = []
 
-        if (fixture) {
-            gwData = fixture.map((match) => {
-                return {
-                    player1: props.getUInfoName(match[0]),
-                    points1: props.getUGwNetPoint(match[0]),
-                    player2: props.getUInfoName(match[1]),
-                    points2: props.getUGwNetPoint(match[1]),
-                }
-            })
+        if (!!props.gwData) {
+            rank = props.gwData.filter(u => groupList.includes(u.id))
         }
-
-        if (Array.isArray(rank) && rank.length > 0) {
-            rank = rank.sort((u1, u2) => {
-                if (u1.point != u2.point) {
-                    return u2.point - u1.point
-                } else {
-                    return u2.total_points - u1.total_points
-                }
-            })
-            rank = rank.map((u, index) => {
-                const uid = u.id
-                const name = props.getUInfoName(uid)
-                return {
-                    index: index + 1,
-                    name,
-                    ...u,
-                }
-            })
-        }
+        
 
         return (
             <React.Fragment>
-                <Table
-                    columns={COLUMN_H2H}
-                    dataSource={gwData}
-                    showSorterTooltip={{ target: 'sorter-icon' }}
-                    pagination={false}
-                    tableLayout={'fixed'}
-                    loading={loading}
-                    rowClassName={'row-group-result'}
-                    sticky={{
-                        offsetHeader: 0,
-                    }}
-                />
                 <div>Bảng xếp hạng</div>
                 <Table
-                    columns={COLUMN_GROUP_RANK}
+                    columns={COLUMN_PHAN_HANG_RANK}
                     dataSource={rank}
                     showSorterTooltip={{ target: 'sorter-icon' }}
                     pagination={false}

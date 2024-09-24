@@ -197,7 +197,7 @@ function European() {
     }, [selectedGw])
 
     const renderMenu = () => {
-        const items = dropDownItems.filter(item => item.key <= currentGw)
+        const items = dropDownItems.filter(item => item.key <= currentGw + 1)
         return {
             items,
             selectable: true,

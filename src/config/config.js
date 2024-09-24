@@ -1,5 +1,41 @@
 export const GROUP_MAX_MEMBER = 16
 
+export const COLUMN_PHAN_HANG_RANK = [
+    {
+        title: '',
+        dataIndex: 'index',
+        width: '10%',
+    },
+    {
+        title: 'Nickname',
+        dataIndex: 'nick',
+        width: '30%',
+        render: (text, row) => <a href={`https://fantasy.premierleague.com/entry/${row.id}/event/${row.gw}`} target="_blank">{text}</a>,
+    },
+    {
+        title: 'Points',
+        dataIndex: 'points',
+        width: '14%',
+    },
+    {
+        title: 'Total Points',
+        dataIndex: 'totalPoints',
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => a.totalPoints - b.totalPoints,
+        width: '18%',
+    },
+    {
+        title: 'Team Values',
+        dataIndex: 'teamValue',
+        width: '15%',
+    },
+    {
+        title: 'Total Cap',
+        dataIndex: 'capPoint',
+        width: '13%',
+    },
+]
+
 export const GROUP_NAME = {
     C1: 0,
     C2: 1,
@@ -80,3 +116,5 @@ export const COLUMN_GROUP_RANK = [
         width: '20%',
     },
 ]
+
+
