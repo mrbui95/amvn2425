@@ -61,8 +61,7 @@ function PhanHang(props) {
             return className + ' row-phanhang-c3'
         } else {
             return className + ' row-phanhang-c4'
-        }
-        
+        }   
     }
 
     return (

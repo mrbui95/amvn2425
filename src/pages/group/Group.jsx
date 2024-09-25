@@ -93,52 +93,134 @@ function Group(props) {
         return round
     }
 
-    const renderGroupResult = (groupName) => {
-        let groupList
-
-        switch (groupName) {
+    const getNextStageCount = (record) => {
+        switch (record.groupName) {
             case GROUP_NAME.C1: {
-                groupList = groupData['c1']
-                break
+                return 8;
             }
-            case GROUP_NAME.C2: {
-                groupList = groupData['c2']
-                break
-            }
-            case GROUP_NAME.C3: {
-                groupList = groupData['c3']
-                break
-            }
+            case GROUP_NAME.C2:
+            case GROUP_NAME.C3:
             case GROUP_NAME.C4: {
-                groupList = groupData['c4']
-                break
+                return 4;
+            }
+            default: {
+                return 0
             }
         }
+    }
 
-        let rank = []
-
-        if (!!props.gwData) {
-            rank = props.gwData.filter(u => groupList.includes(u.id))
+    const getPlayOff1Count = (record) => {
+        switch (record.groupName) {
+            case GROUP_NAME.C1:
+            case GROUP_NAME.C2:
+            case GROUP_NAME.C3:
+            case GROUP_NAME.C4: {
+                return 4;
+            }
+            default: {
+                return 0
+            }
         }
-        
+    }
 
-        return (
-            <React.Fragment>
-                <div>Bảng xếp hạng</div>
-                <Table
-                    columns={COLUMN_PHAN_HANG_RANK}
-                    dataSource={rank}
-                    showSorterTooltip={{ target: 'sorter-icon' }}
-                    pagination={false}
-                    tableLayout={'fixed'}
-                    loading={loading}
-                    rowClassName={'row-group-rank'}
-                    sticky={{
-                        offsetHeader: 0,
-                    }}
-                />
-            </React.Fragment>
-        )
+    const getPlayOff2Count = (record) => {
+        switch (record.groupName) {
+            case GROUP_NAME.C1:
+            case GROUP_NAME.C4: {
+                return 0;
+            }
+            case GROUP_NAME.C2:
+            case GROUP_NAME.C3: {
+                return 4;
+            }
+            default: {
+                return 0
+            }
+        }
+    }
+
+    const calcRowClassName = (record) => {
+        let className = 'row-group-rank '
+        console.log(record)
+        const nextStage = getNextStageCount(record)
+        const playOff1 = nextStage + getPlayOff1Count(record)
+        const playOff2 = playOff1 + getPlayOff2Count(record)
+
+        if (record.index <= nextStage) {
+            return className + ' row-group-rank-next-stage'
+        } else if (record.index <= playOff1) {
+            return className + ' row-group-rank-playoff1'
+        } else if (record.index <= playOff2) {
+            return className + ' row-group-rank-playoff2'
+        } else {
+            return className + ' row-group-rank-fail'
+        }
+    }
+
+    const renderGroupResult = (groupName) => {
+        let groupList = []
+
+        console.log('groupData', groupData)
+
+        try {
+
+            switch (groupName) {
+                case GROUP_NAME.C1: {
+                    groupList = groupData['c1']
+                    break
+                }
+                case GROUP_NAME.C2: {
+                    groupList = groupData['c2']
+                    break
+                }
+                case GROUP_NAME.C3: {
+                    groupList = groupData['c3']
+                    break
+                }
+                case GROUP_NAME.C4: {
+                    groupList = groupData['c4']
+                    break
+                }
+            }
+
+            let rank = []
+
+            console.log('groupList: ', groupList)
+            groupList = groupList.map(id => id.toString())
+
+            if (!!props.gwData) {
+                rank = props.gwData.filter(u => groupList.includes(u.id))
+            }
+
+            console.log(rank)
+
+            rank = rank.map((u, index) => {
+                u.index = index + 1
+                u.groupName = groupName
+                return u
+            })
+
+
+            return (
+                <React.Fragment>
+                    <div>Bảng xếp hạng</div>
+                    <Table
+                        columns={COLUMN_PHAN_HANG_RANK}
+                        dataSource={rank}
+                        showSorterTooltip={{ target: 'sorter-icon' }}
+                        pagination={false}
+                        tableLayout={'fixed'}
+                        loading={loading}
+                        rowClassName={calcRowClassName}
+                        sticky={{
+                            offsetHeader: 0,
+                        }}
+                    />
+                </React.Fragment>
+            )
+        } catch (e) {
+            console.error(e)
+        }
 
         return ''
     }

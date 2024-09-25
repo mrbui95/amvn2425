@@ -1,0 +1,31 @@
+.row-group-rank {
+    padding: 10px 5px !important;
+
+    .ant-table-cell {
+        padding: 10px 5px !important;
+    }
+}
+
+.row-group-rank-next-stage {
+    .ant-table-cell {
+        background-color: #84fcac75 !important;
+    }
+}
+
+.row-group-rank-playoff1 {
+    .ant-table-cell {
+        background-color: #fcff2db4 !important;
+    }
+}
+
+.row-group-rank-playoff2 {
+    .ant-table-cell {
+        background-color: #4db5fa75 !important;
+    }
+}
+
+.row-group-rank-fail {
+    .ant-table-cell {
+        background-color: #8b8b8ba6 !important;
+    }
+}
