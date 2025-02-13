@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './styles/home.scss';
 import './styles/phanhang.scss';
 import './styles/group.scss';
+import './styles/knockout.scss';
 
 import MainPage from './pages/MainPage.jsx';
 

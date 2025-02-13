@@ -197,7 +197,7 @@ function European() {
     }, [selectedGw])
 
     const renderMenu = () => {
-        const items = dropDownItems.filter(item => item.key <= currentGw)
+        const items = dropDownItems.filter(item => item.key <= (currentGw < 12 || (currentGw > 19 && currentGw < 27) ? currentGw : (currentGw + 1)))
         return {
             items,
             selectable: true,
@@ -211,7 +211,7 @@ function European() {
     }
 
     const renderContent = () => {
-        if (selectedGw <= 4) {
+        if (selectedGw <= 4 || (selectedGw > 19 && selectedGw <= 23)) {
             return (
                 <PhanHang
                     selectedGw={selectedGw}
@@ -226,7 +226,7 @@ function European() {
                 />
             )
         }
-        else if (selectedGw <= 12) {
+        else if (selectedGw <= 12 || (selectedGw > 19 && selectedGw <= 31)) {
             return (
                 <Group
                     selectedGw={selectedGw}
@@ -240,7 +240,7 @@ function European() {
                     stage={stage}
                 />
             )
-        } else if (selectedGw <= 14) {
+        } else if (selectedGw <= 14 || (selectedGw > 19 && selectedGw <= 33)) {
             return (
                 <PlayOff
                     selectedGw={selectedGw}
@@ -252,9 +252,10 @@ function European() {
                     getUGwNetPoint={getUGwNetPoint}
                     getUGwPrevNetPoint={getUGwPrevNetPoint}
                     stage={stage}
+                    isFirstLeg={selectedGw === 13}
                 />
             )
-        } else if (selectedGw <= 16) {
+        } else if (selectedGw <= 16 || (selectedGw > 19 && selectedGw <= 35)) {
             return (
                 <QuarterFinal
                     selectedGw={selectedGw}
@@ -266,9 +267,10 @@ function European() {
                     getUGwNetPoint={getUGwNetPoint}
                     getUGwPrevNetPoint={getUGwPrevNetPoint}
                     stage={stage}
+                    isFirstLeg={selectedGw === 15}
                 />
             )
-        } else if (selectedGw <= 18) {
+        } else if (selectedGw <= 18 || (selectedGw > 19 && selectedGw <= 37)) {
             return (
                 <SemiFinal
                     selectedGw={selectedGw}
@@ -280,9 +282,10 @@ function European() {
                     getUGwNetPoint={getUGwNetPoint}
                     getUGwPrevNetPoint={getUGwPrevNetPoint}
                     stage={stage}
+                    isFirstLeg={selectedGw === 17}
                 />
             )
-        } else if (selectedGw == 19) {
+        } else if (selectedGw == 19 || selectedGw == 38) {
             return (
                 <Final
                     selectedGw={selectedGw}

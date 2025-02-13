@@ -80,48 +80,83 @@ function PlayOff(props) {
                 fullFixture.push(match)
                 // fullFixture.push([...match].reverse())
                 fullFixture.push(match)
+                fullFixture.push(match)
             })
 
 
 
             fixture = fullFixture.map((match, index) => {
-                const player1Name = props.getUInfoName(match[0])
-                const player2Name = props.getUInfoName(match[1])
+                const player1Id = match[0]
+                const player2Id = match[1]
+                const player1Name = props.getUInfoName(player1Id)
+                const player2Name = props.getUInfoName(player2Id)
 
                 if (isFirstLeg) {
-                    if (index % 2 === 0) {
+                    if (index % 3 === 0) {
                         return {
                             gw: props.selectedGw,
                             player1: player1Name,
-                            points1: props.getUGwNetPoint(match[0]),
+                            points1: props.getUGwNetPoint(player1Id),
                             player2: player2Name,
-                            points2: props.getUGwNetPoint(match[1]),
+                            points2: props.getUGwNetPoint(player2Id),
+                            player1Id,
+                            player2Id,
                         }
-                    } else {
+                    } else if (index % 3 === 0) {
                         return {
-                            gw: props.selectedGw + 1,
+                            gw: Number(props.selectedGw) + 1,
                             player1: player1Name,
                             points1: 0,
                             player2: player2Name,
                             points2: 0,
-                        }
-                    }
-                } else {
-                    if (index % 2 == 0) {
-                        return {
-                            gw: props.selectedGw - 1,
-                            player1: player1Name,
-                            points1: props.getUGwPrevNetPoint(match[0]),
-                            player2: player2Name,
-                            points2: props.getUGwPrevNetPoint(match[1]),
+                            player1Id,
+                            player2Id,
                         }
                     } else {
                         return {
+                            gw: 'Tổng cộng',
+                            player1: player1Name,
+                            points1: props.getUGwPrevNetPoint(match[0]) + props.getUGwNetPoint(match[0]),
+                            player2: player2Name,
+                            points2: props.getUGwPrevNetPoint(match[1]) + props.getUGwNetPoint(match[1]),
+                            isSum: true,
+                            last_gw: Number(props.selectedGw) + 1,
+                            player1Id,
+                            player2Id,
+                        }
+                    }
+                } else {
+                    if (index % 3 == 0) {
+                        return {
+                            gw: Number(props.selectedGw) - 1,
+                            player1: player1Name,
+                            points1: props.getUGwPrevNetPoint(player1Id),
+                            player2: player2Name,
+                            points2: props.getUGwPrevNetPoint(player2Id),
+                            player1Id,
+                            player2Id,
+                        }
+                    } else if (index % 3 == 1) {
+                        return {
                             gw: props.selectedGw,
                             player1: player1Name,
-                            points1: props.getUGwNetPoint(match[0]),
+                            points1: props.getUGwNetPoint(player1Id),
                             player2: player2Name,
-                            points2: props.getUGwNetPoint(match[1]),
+                            points2: props.getUGwNetPoint(player2Id),
+                            player1Id,
+                            player2Id,
+                        }
+                    } else {
+                        return {
+                            gw: 'Tổng cộng',
+                            player1: player1Name,
+                            points1: props.getUGwPrevNetPoint(match[0]) + props.getUGwNetPoint(match[0]),
+                            player2: player2Name,
+                            points2: props.getUGwPrevNetPoint(match[1]) + props.getUGwNetPoint(match[1]),
+                            isSum: true,
+                            last_gw: Number(props.selectedGw),
+                            player1Id,
+                            player2Id,
                         }
                     }
                 }

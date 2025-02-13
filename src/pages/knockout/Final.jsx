@@ -86,6 +86,8 @@ function Final(props) {
                     points1: props.getUGwNetPoint(match[0]),
                     player2: player2Name,
                     points2: props.getUGwNetPoint(match[1]),
+                    player1Id: match[0],
+                    player2Id: match[1],
                 }
             })
         } else {
@@ -103,6 +105,8 @@ function Final(props) {
                     points1: props.getUGwNetPoint(match[0]),
                     player2: player2Name,
                     points2: props.getUGwNetPoint(match[1]),
+                    player1Id: match[0],
+                    player2Id: match[1],
                 }
             })
         } else {

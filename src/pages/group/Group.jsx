@@ -47,7 +47,7 @@ function Group(props) {
 
     const getRankData = async (gw) => {
         try {
-            const rankDataURL = "https://mrbui95.github.io/amvn2425/data/c1/group/rank_" + gw + ".json"
+            const rankDataURL = "https://mrbui95.github.io/amvn2425/data/c1/group/rank_classic_" + gw + ".json"
 
             const response = await fetch(rankDataURL);
             if (!response.ok) {
@@ -66,9 +66,6 @@ function Group(props) {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const groupData = await getGroupData();
-            setGroupData(groupData)
-            console.log(groupData)
             setLoading(false);
         };
 
@@ -78,6 +75,9 @@ function Group(props) {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            const groupData = await getRankData(props.selectedGw);
+            setGroupData(groupData)
+            console.log(groupData)
             setLoading(false);
         };
 
@@ -141,7 +141,6 @@ function Group(props) {
 
     const calcRowClassName = (record) => {
         let className = 'row-group-rank '
-        console.log(record)
         const nextStage = getNextStageCount(record)
         const playOff1 = nextStage + getPlayOff1Count(record)
         const playOff2 = playOff1 + getPlayOff2Count(record)
@@ -159,8 +158,6 @@ function Group(props) {
 
     const renderGroupResult = (groupName) => {
         let groupList = []
-
-        console.log('groupData', groupData)
 
         try {
 
@@ -185,18 +182,30 @@ function Group(props) {
 
             let rank = []
 
-            console.log('groupList: ', groupList)
-            groupList = groupList.map(id => id.toString())
+            const groupListId = groupList.map(player => player.id)
 
             if (!!props.gwData) {
-                rank = props.gwData.filter(u => groupList.includes(u.id))
+                rank = props.gwData.filter(u => groupListId.includes(u.id))
             }
 
-            console.log(rank)
-
-            rank = rank.map((u, index) => {
-                u.index = index + 1
+            rank = rank.map((u) => {
                 u.groupName = groupName
+                const player = groupList.filter(p => p.id === u.id)[0]
+                u.totalPoints = player.total_points
+                u.capPoint = groupList.filter(us => us.id === u.id)[0].total_cap
+                return u
+            })
+
+            rank = rank.sort((a, b) => {
+                if (b.totalPoints !== a.totalPoints) {
+                    return b.totalPoints - a.totalPoints; // Sắp xếp giảm dần theo totalPoints
+                } else if (b.teamValue !== a.teamValue) {
+                    return b.teamValue - a.teamValue; // Nếu total bằng nhau, sắp xếp giảm dần theo teamValue
+                } else {
+                    return b.capPoint - a.capPoint; // Nếu value cũng bằng nhau, sắp xếp giảm dần theo capPoint
+                }
+            }).map((u, index) => {
+                u.index = index + 1
                 return u
             })
 

@@ -3,6 +3,7 @@ import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import Home from './Home.jsx'
 import European from './European.jsx';
 import TheThuc from './TheThuc.jsx';
+import SecondChance from './SecondChance.jsx';
 
 const { Header, Content, Footer } = Layout;
 
@@ -54,7 +55,7 @@ function MainPage() {
         return (<European />)
       }
       case PAGE_NAME.SECOND_CHANCE: {
-        return (<European />)
+        return (<SecondChance />)
       }
       case PAGE_NAME.THE_THUC: {
         return (<TheThuc />)

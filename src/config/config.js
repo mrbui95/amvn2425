@@ -76,21 +76,25 @@ export const COLUMN_KNOCK_OUT = [
         title: 'PLayer 1',
         dataIndex: 'player1',
         width: '27.5%',
+        render: (text, row) => <a href={`https://fantasy.premierleague.com/entry/${row.player1Id}/history`} target="_blank">{text}</a>,
     },
     {
         title: '',
         dataIndex: 'points1',
         width: '15%',
+        render: (text, row) => <div className={row.points1 > row.points2 ? 'win' : (row.points1 === row.points2 ? 'draw' : 'lose')}>{text}</div>,
     },
     {
         title: '',
         dataIndex: 'points2',
         width: '15%',
+        render: (text, row) => <div className={row.points1 > row.points2 ? 'lose' : (row.points1 === row.points2 ? 'draw' : 'win')}>{text}</div>,
     },
     {
         title: 'Player 2',
         dataIndex: 'player2',
         width: '27.5%',
+        render: (text, row) => <a href={`https://fantasy.premierleague.com/entry/${row.player2Id}/history`} target="_blank">{text}</a>,
     },
 ]
 
@@ -114,6 +118,42 @@ export const COLUMN_GROUP_RANK = [
         title: 'Tổng điểm',
         dataIndex: 'total_points',
         width: '20%',
+    },
+]
+
+export const COLUMN_SECOND_CHANCE = [
+    {
+        title: '',
+        dataIndex: 'index',
+        width: '10%',
+    },
+    {
+        title: 'Nickname',
+        dataIndex: 'nick',
+        width: '30%',
+        render: (text, row) => <a href={`https://fantasy.premierleague.com/entry/${row.id}/event/${row.gw}`} target="_blank">{text}</a>,
+    },
+    {
+        title: 'Points',
+        dataIndex: 'points',
+        width: '14%',
+    },
+    {
+        title: 'Total Points',
+        dataIndex: 'totalPoints',
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => a.totalPoints - b.totalPoints,
+        width: '18%',
+    },
+    {
+        title: 'Team Values',
+        dataIndex: 'teamValue',
+        width: '15%',
+    },
+    {
+        title: 'Total Cap',
+        dataIndex: 'capPoint',
+        width: '13%',
     },
 ]
 
